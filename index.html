@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Small web games by notmysql</title>
+    <title>Small web things</title>
 
     <style>
         body {
@@ -17,7 +17,7 @@
 <body>
     <header>
         <h1>Small web things</h1>
-        <h6>A few small web things written in plain HTML JS and CSS. View the page's source to see the all the code in one file</h6>
+        <h6>just some small web things written in plain HTML JS and CSS. View the page's source to see the all the code in one file</h6>
     </header>
     <hr />
     <main>
@@ -96,7 +96,7 @@
             </script>
         </section>
         <section>
-            <h4>Thing 3 - Powers of 2</h4>
+            <h4>Thing 3 - A game of chance</h4>
             <h6>For each of the rows of checkbox pairs, choose one to click. One is safe. The other is not. See how far you can make it.</h6>
             <input type="range" min="2" max="20" step="1" value="5" id="t3_num_pairs"></input><span id="t3_num_pairs_text" style="padding-left: 1rem;"><span id="t3_n_rows_span">5</span> rows = 1 in <span id="t3_1_in_span">32</span> = <span id="t3_percent_span">3.125</span>%</span>
             <p id="t3_status">-</p>
@@ -313,6 +313,73 @@ button.addEventListener("click", () => {
 
 // TRY UNCOMMENTING THE NEXT LINE (then press the button!)
 // alert("Hello World!");
+            </script>
+        </section>
+        <section>
+            <h4>Thing 6 - Iframe Inception</h4>
+            <h6>This usually wouldn't work but we can use JS to grab the full HTML for the document and inject it into the iframe instead of just setting the source of the iframe to "window.location.href"</h6>
+
+            <div class="t6_controls">
+                <input id="t6_rot_slider" style="margin-bottom: 1rem;" type="range" min="0" max="360" step="0.1" value="0"/><span style="padding-left: 1rem;">rotation: <span id="t6_deg_span" style="font-family: monospace;">0deg</span></span><br/>
+                <input id="t6_scale_slider" style="margin-bottom: 1rem;" type="range" min="-1" max="1.1" step="0.1" value="1"/><span style="padding-left: 1rem;">scale: <span id="t6_scale_span" style="font-family: monospace;">1</span></span>
+            </div>
+
+            <iframe id="t6_iframe" src="" loading="eager"></iframe>
+
+            
+            <style>
+                #t6_iframe {
+                    width: 100%;
+                    aspect-ratio: 16/9;
+                }
+                .t6_controls {
+                    margin-bottom: 2rem;
+                }
+            </style>
+            <script>
+                const t6_rot_slider = document.querySelector("#t6_rot_slider");
+                const t6_deg_span = document.querySelector("#t6_deg_span");
+
+                t6_rot_slider.addEventListener("change", () => {
+                    t6_deg_span.innerText = t6_rot_slider.value + "deg";
+                    document.querySelector("#t6_iframe").style.rotate = `${t6_rot_slider.value}deg`;
+                    render();
+                });
+
+                t6_rot_slider.addEventListener("input", () => {
+                    t6_deg_span.innerText = t6_rot_slider.value + "deg";
+                    document.querySelector("#t6_iframe").style.rotate = `${t6_rot_slider.value}deg`;
+                });
+
+                const t6_scale_slider = document.querySelector("#t6_scale_slider");
+                const t6_scale_span = document.querySelector("#t6_scale_span");
+
+                t6_scale_slider.addEventListener("change", () => {
+                    t6_scale_span.innerText = t6_scale_slider.value;
+                    document.querySelector("#t6_iframe").style.scale = `${t6_scale_slider.value}`;
+                    render();
+                });
+
+                t6_scale_slider.addEventListener("input", () => {
+                    t6_scale_span.innerText = t6_scale_slider.value;
+                    document.querySelector("#t6_iframe").style.scale = `${t6_scale_slider.value}`;
+                });
+
+                function render(){
+                    let document_html = document.querySelector("html").innerHTML;
+                    function onEntry(entry) {
+                        entry.forEach(change => {
+                            if(change.isIntersecting){
+                                const t6_iframe = document.querySelector("#t6_iframe");
+                                t6_iframe.srcdoc = document_html;
+                            }
+                        });
+                    }
+                    
+                    let observer = new IntersectionObserver(onEntry, {});
+                    observer.observe(document.querySelector("#t6_iframe"));
+                }
+                render();
             </script>
         </section>
     </main>
