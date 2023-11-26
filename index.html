@@ -74,8 +74,18 @@
 
 <body>
     <header>
-        <h1>Small web things</h1>
-        <h6>just some small web things written in plain HTML JS and CSS. View the page's source to see the all the code in one file</h6>
+        <h1 id="t0_title"> 0 Small web things</h1>
+        <h6>just some small web things written in plain HTML JS and CSS. View the page's source to see all the code in one file</h6>
+        <script>
+            document.addEventListener("DOMContentLoaded", _ => {
+                // get number of sections
+                const n_sections = document.querySelectorAll("section").length;
+                const t0_title = document.querySelector("#t0_title");
+    
+                // replace #N with number of sections
+                t0_title.innerText = t0_title.innerText.replace("0", n_sections);
+            })
+        </script>
     </header>
     <hr />
     <main>
@@ -625,9 +635,9 @@ button.addEventListener("click", () => {
         </section>
         <section>
             <h4>Thing 8 - Mini JS console</h4>
-            <h6>This section uses a script to hijack the windows console object to add a listner that reports to this box. So any errors or console messages from the entire site will report here. You can try using your browsers developer tools to send a console.log message and it will show up here.</h6>
+            <h6>This section uses a script to hijack the windows console object to add a listner that reports to this box. So any errors or console messages from the entire site will report here. You can try using your browsers developer tools to send a console.log message and it will show up here. Or use the input box below. Note: Currently doesen't capture stuff other than log, warn and error. Console.table doesen't work for example(but it would be easy to add).</h6>
             <div id="t8_output" style="width: 100%; height: 10rem; font-family: monospace; font-size: 10pt; border: 1px solid; border-radius: 2px; margin-bottom: 5px;overflow: scroll;"></div>
-            <input id="t8_input" type="text"></input>
+            <input id="t8_input" type="text" placeholder=">" style="font-family: monospace;"></input>
 
             <script>
                 const t8_output = document.querySelector("#t8_output");
@@ -668,7 +678,7 @@ button.addEventListener("click", () => {
         <section>
             <h4>Thing 9 - The 2FA Game</h4>
             <h6>You know when your using 2FA and you need to quickly enter your auth code from your phone to you computer before it expires? Thats what this game is. </h6>
-            <input type="range" min="100" max="2000" value="1000" id="t9_timeout" style="margin-bottom: 20px;"></input><span style="padding-left: 1rem;">Difficulty (&lt;- easy | hard ->)</span>
+            <input type="range" min="100" max="2000" value="1000" id="t9_timeout" style="margin-bottom: 20px;"></input><span style="padding-left: 1rem;">Difficulty (&lt;- hard | easy ->)</span>
             <div class="t9_auth_app">
                 <h6>Super 2FA</h6>
                 <p>Hover to show code: <span class="t9_hidden" id="t9_code">000000</span></p>
