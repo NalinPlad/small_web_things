@@ -626,7 +626,7 @@ button.addEventListener("click", () => {
         <section>
             <h4>Thing 8 - Mini JS console</h4>
             <h6>This section uses a script to hijack the windows console object to add a listner that reports to this box. So any errors or console messages from the entire site will report here. You can try using your browsers developer tools to send a console.log message and it will show up here.</h6>
-            <div id="t8_output" style="width: 100%; height: 10rem; font-family: monospace; font-size: 10pt; border: 1px solid; border-radius: 2px; margin-bottom: 5px;"></div>
+            <div id="t8_output" style="width: 100%; height: 10rem; font-family: monospace; font-size: 10pt; border: 1px solid; border-radius: 2px; margin-bottom: 5px;overflow: scroll;"></div>
             <input id="t8_input" type="text"></input>
 
             <script>
@@ -666,19 +666,102 @@ button.addEventListener("click", () => {
             </script>
         </section>
         <section>
-            <h4>Thing 9 - Unicode soup</h4>
-            <div id="t9_soup"></div>
-            <script>
-                const t9_soup = document.querySelector("#t9_soup");
+            <h4>Thing 9 - The 2FA Game</h4>
+            <h6>You know when your using 2FA and you need to quickly enter your auth code from your phone to you computer before it expires? Thats what this game is. </h6>
+            <input type="range" min="100" max="2000" value="1000" id="t9_timeout" style="margin-bottom: 20px;"></input><span style="padding-left: 1rem;">Difficulty (&lt;- easy | hard ->)</span>
+            <div class="t9_auth_app">
+                <h6>Super 2FA</h6>
+                <p>Hover to show code: <span class="t9_hidden" id="t9_code">000000</span></p>
+                <progress id="t9_progress" value="0" max="100"></progress>
+            </div>
+            <input id="t9_input" type="text" placeholder="Enter 2FA Code"></input>
 
-                const soup = [];
-                for (let i = 0; i < 100; i++) {
-                    soup.push(String.fromCharCode(Math.floor(Math.random() * 65536)));
+            <style>
+                .t9_auth_app {
+                    display: flex;
+                    flex-direction: column;
+                    margin-bottom: 1rem;
+                    border: 5px ridge tomato;
+                    width: fit-content;
+                    padding: 1rem;
+                    align-items: center;
+                    /* justify-content: center; */
+                    /* width: 100%; */
+                    /* height: 100%; */
+                    /* font-family: monospace; */
+                    /* font-size: 10pt; */
+
                 }
 
-                t9_soup.innerHTML = soup.map((row) => {
-                    return row.join("");
-                }).join("<br/>");
+                .t9_auth_app > h6 {
+                    margin-bottom: 10px;
+                }
+
+                .t9_auth_app > * {
+                    margin: 2px;
+                }
+
+                .t9_auth_app > progress {
+                    /* align-self: center; */
+                    /* margin-top: 10px; */
+                    width: 50%;
+                }
+
+                .t9_hidden {
+                    background-color: black;
+                }
+                .t9_hidden:hover {
+                    background-color: transparent;
+                }
+            </style>
+            
+            <script>
+                // get refs
+                const t9_code = document.querySelector("#t9_code");
+                const t9_input = document.querySelector("#t9_input");
+                const t9_progress = document.querySelector("#t9_progress");
+                const t9_timeout_slider = document.querySelector("#t9_timeout");
+
+                let t9_timeout = t9_timeout_slider.value;
+
+                t9_timeout_slider.addEventListener("input", () => {
+                    t9_timeout = t9_timeout_slider.value;
+                    // document.querySelector("#t9_timeout_span").innerText = t9_timeout;
+                });
+
+                function t9_updateCode() {
+                    t9_code.innerText = Math.floor(Math.random() * 1000000).toString().padStart(6, "0");
+                    t9_progress.value = 0;
+                }
+
+                // update progress bar, and make the code update when the progress bar is full
+                let t9_interval;
+                t9_interval = setInterval(() => {
+                    t9_progress.value += 100 / t9_timeout;
+                    if (t9_progress.value >= 100) {
+                        t9_updateCode();
+                    }
+                }, 1);
+
+                t9_updateCode();
+
+                // if input is correct alert
+                t9_input.addEventListener("keydown", (e) => {
+                    if (e.key == "Enter") {
+                        if (t9_input.value == t9_code.innerText) {
+                            alert("Logged in!");
+                            t9_updateCode();
+                        } else {
+                            alert("Incorrect code");
+                        }
+                        t9_input.value = "";
+                    }
+                });
+
+                // remove focus from input when hovering over code
+                t9_code.addEventListener("mouseover", () => {
+                    t9_input.blur();
+                });                
             </script>
         </section>
     </main>
