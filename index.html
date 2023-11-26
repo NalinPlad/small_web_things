@@ -5,6 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Small web games by notmysql</title>
+
+    <style>
+        body {
+            margin: 30px;
+        }
+    </style>
+
 </head>
 
 <body>
@@ -257,10 +264,11 @@
         </section>
         <section>
             <h4>Thing 4 - CSS Editor with zero JS</h4>
+            <h6>This section contains zero javascript; the editor below the box is an html &lt;style> tag with the "style_block" class applied to it. The css for that id showed in the editor box makes it visible, and adding the HTML attribute "contenteditable" makes it editable.</h6>
             <div class="box">
                 Hello World!
             </div>
-            <style id="style_block" contenteditable="">/* Edit this class and watch the box update in real-time */
+            <style class="style_block" contenteditable="">/* Edit this class and watch the box update in real-time */
             
 .box {
   background-color: aquamarine;
@@ -276,7 +284,7 @@
 
 /* applied to html style tag. view-source to see whats happening */
 
-#style_block {
+.style_block {
     display: block; 
     width: fit-content;
     border: 1px 
@@ -287,6 +295,25 @@
     margin-top: 10px;
 }
 </style>
+        </section>
+        <section>
+            <h4>Thing 5 - JS Editor with zero JS</h4>
+            <h6>Read the paragraph inside the script editor below for an explanation; basically the same thing as above but this time we need to re-eval the code to make it run.</h6>
+            <button type="button" id="t5_button">Hi, I am <b><i>t5_button</i></b></button>
+            <script id="script_block" class="style_block" contenteditable="">/* Basically the same thing as the CSS editor for editing.
+Executing the script is harder though, because when you edit the script tag,
+you don't actually edit the event listener. Instead we use a workaround where 
+we eval the script tag's innerText when the button is clicked. That means 
+that everything in the editor is re-run when you click the button. */
+
+const button = document.querySelector("#t5_button")
+button.addEventListener("click", () => {
+    eval(document.querySelector("#script_block").innerText);
+});
+
+// TRY UNCOMMENTING THE NEXT LINE (then press the button!)
+// alert("Hello World!");
+            </script>
         </section>
     </main>
 </body>
