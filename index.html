@@ -260,7 +260,7 @@
 
                     </script>
                 </tbody>
-                <table>
+            </table>
         </section>
         <section>
             <h4>Thing 4 - CSS Editor with zero JS</h4>
@@ -329,8 +329,9 @@ button.addEventListener("click", () => {
             
             <style>
                 #t6_iframe {
-                    width: 100%;
-                    aspect-ratio: 16/9;
+                    /* width: 100%; */
+                    /* height: 20rem; */
+                    aspect-ratio: 16/9; 
                 }
                 .t6_controls {
                     margin-bottom: 2rem;
@@ -379,7 +380,201 @@ button.addEventListener("click", () => {
                     let observer = new IntersectionObserver(onEntry, {});
                     observer.observe(document.querySelector("#t6_iframe"));
                 }
-                render();
+                window.addEventListener("load", render);
+            </script>
+        </section>
+        <section>
+            <h4>Thing 7 - Toy calculator</h4>
+
+            <table class="t7_table">
+                <tbody>
+                    <tr>
+                        <td colspan="4"><input id="t7_display" type="text" value="0" disabled></td>
+                    </tr>
+                    <tr>
+                        <td><button id="t7_7">7</button></td>
+                        <td><button id="t7_8">8</button></td>
+                        <td><button id="t7_9">9</button></td>
+                        <td><button id="t7_divide">/</button></td>
+                    </tr>
+                    <tr>
+                        <td><button id="t7_4">4</button></td>
+                        <td><button id="t7_5">5</button></td>
+                        <td><button id="t7_6">6</button></td>
+                        <td><button id="t7_multiply">*</button></td>
+                    </tr>
+                    <tr>
+                        <td><button id="t7_1">1</button></td>
+                        <td><button id="t7_2">2</button></td>
+                        <td><button id="t7_3">3</button></td>
+                        <td><button id="t7_subtract">-</button></td>
+                    </tr>
+                    <tr>
+                        <td><button id="t7_0">0</button></td>
+                        <td><button id="t7_decimal">.</button></td>
+                        <td><button id="t7_equals">=</button></td>
+                        <td><button id="t7_add">+</button></td>
+                    </tr>
+                    <tr>
+                        <td colspan="4"><button id="t7_clear">clear</button><span> Ti-84</span></td>
+                    </tr>
+                </tbody>
+            </table>
+            <style>
+                .t7_table {
+                    border-collapse: collapse;
+                    border: 5px ridge whitesmoke;
+                    display: flex;
+                    flex-direction: column;
+                    width: fit-content;
+                }
+
+                .t7_table>tbody {
+                    border-collapse: collapse;
+                    display: flex;
+                    flex-direction: column;
+                    padding: 5px;
+                    /* width: fit-content; */
+                }
+
+                /* Buttons */
+                .t7_table>*>*>*>* {
+                    font-family: monospace;
+                    font-size: 10pt;
+                }
+
+                /* Display */
+                .t7_table>tbody>tr>td>#t7_display {
+                    /* width: 50%; */
+                    font-family: monospace;
+                    font-size: 10pt;
+                    text-align: right;
+                    width: 110px;
+                }
+
+                /* make gap smaller */
+                .t7_table>tbody>tr>td {
+                    /* width: 0px; */
+                    padding: 3px;
+                    /* background-color: black; */
+                }
+            </style>
+            <script>
+                // get refs to all the buttons in a dict
+                const buttons = {};
+                for (let i = 0; i < 10; i++) {
+                    buttons[i] = document.querySelector(`#t7_${i}`);
+                }
+                buttons["."] = document.querySelector("#t7_decimal");   
+                buttons["="] = document.querySelector("#t7_equals");
+                buttons["/"] = document.querySelector("#t7_divide");
+                buttons["*"] = document.querySelector("#t7_multiply");
+                buttons["-"] = document.querySelector("#t7_subtract");
+                buttons["+"] = document.querySelector("#t7_add");
+                buttons["clear"] = document.querySelector("#t7_clear");
+
+                // get ref to the display
+                const display = document.querySelector("#t7_display");
+
+                let buffer = 0;
+                let answer_buffer = 0;
+                let operator;
+                let isFloat = false;
+
+                buttons["clear"].addEventListener("click", () => {
+                    buffer = 0;
+                    display.value = "0";
+                    isFloat = false;
+                    answer_buffer = 0;
+                    operator = undefined;
+                });
+
+                for (let i = 0; i < 10; i++) {
+                    buttons[i].addEventListener("click", () => {
+                        if (answer_buffer == 0 && operator != undefined) {
+                            answer_buffer = buffer
+                            buffer = 0;
+                            console.log("here");
+                        }
+                        if (isFloat) {
+                            buffer = parseFloat(buffer.toString() + '.' + i.toString());
+                            isFloat = false;
+                        } else if (buffer.toString().includes(".")) {
+                            buffer = parseFloat(buffer.toString() + i.toString());
+                        } else {
+                            buffer = parseInt(buffer.toString() + i.toString());
+                        }
+                        display.value = buffer;
+                        console.log(buffer);
+                        console.log(buffer.isFloat);
+                    });
+                }
+
+                buttons["."].addEventListener("click", () => {
+                    if (buffer.toString().includes(".")) {
+                        return;
+                    }
+                    isFloat = true;
+                    buffer = parseFloat(buffer.toString()+".");
+                    display.value = buffer+'.';
+                });
+
+                buttons["="].addEventListener("click", () => {
+                    if (operator == undefined) {
+                        return;
+                    }
+                    switch (operator) {
+                        case "/":
+                            buffer = answer_buffer / buffer;
+                            break;
+                        case "*":
+                            buffer = answer_buffer * buffer;
+                            break;
+                        case "-":
+                            buffer = answer_buffer - buffer;
+                            break;
+                        case "+":
+                            buffer = answer_buffer + buffer;
+                            break;
+                    }
+                    display.value = buffer;
+                    // answer_buffer = buffer;
+                    // buffer = 0;
+                    answer_buffer = 0;
+                    operator = undefined;
+                    isFloat = false;
+                });
+
+                const operators = ["+", "-", "*", "/"];
+                operators.forEach((op) => {
+                    buttons[op].addEventListener("click", () => {
+                        if(answer_buffer == 0){
+                            operator = op;
+                            answer_buffer = buffer;
+                            buffer = 0;
+                            display.value = buffer;
+                            isFloat = false;
+                        } else {
+                            // do the calculation and move the answer into the buffer
+                            buttons["="].click();
+                            // set the operator
+                            operator = op;
+                        }
+                    });
+                });
+
+                // console.table all the relevant values every frame
+                setInterval(() => {
+                    console.table({
+                        buffer: buffer,
+                        answer_buffer: answer_buffer,
+                        operator: operator,
+                        isFloat: isFloat
+                    });
+                }, 100);
+
+
+
             </script>
         </section>
     </main>
