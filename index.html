@@ -12,6 +12,54 @@
         }
     </style>
 
+    <script>
+        /*
+            Script for Thing 8 - Mini JS console, script is here instead of in its section because we want to get a high priority script execution to capture all output as soon as possible
+        */
+
+        const old_log = console.log;
+        const old_error = console.error;
+        const old_warn = console.warn;
+
+        let messages = [];
+
+        console.log = function (...args) {
+            var msg = {...args}[0];
+            messages.push(msg);
+            const lgevent = new Event("log");
+            lgevent.message = msg;
+            // lgevent.type = "log";
+            lgevent.loglevel = "log";
+            document.dispatchEvent(lgevent);
+
+            old_log.apply(this, arguments);
+        }
+
+        console.error = function (...args) {
+            var msg = {...args}[0];
+            messages.push(msg);
+            const lgevent = new Event("log");
+            lgevent.message = msg;
+            // lgevent.type = "error";
+            lgevent.loglevel = "error";
+            document.dispatchEvent(lgevent);
+
+            old_error.apply(this, arguments);
+        }
+
+        console.warn = function (...args) {
+            var msg = {...args}[0];
+            messages.push(msg);
+            const lgevent = new Event("log");
+            lgevent.message = msg;
+            // lgevent.type = "warn";
+            lgevent.loglevel = "warn";
+            document.dispatchEvent(lgevent);
+
+            old_warn.apply(this, arguments);
+        }
+    </script>
+
 </head>
 
 <body>
@@ -494,7 +542,7 @@ button.addEventListener("click", () => {
                         if (answer_buffer == 0 && operator != undefined) {
                             answer_buffer = buffer
                             buffer = 0;
-                            console.log("here");
+                            // console.log("here");
                         }
                         if (isFloat) {
                             buffer = parseFloat(buffer.toString() + '.' + i.toString());
@@ -505,8 +553,8 @@ button.addEventListener("click", () => {
                             buffer = parseInt(buffer.toString() + i.toString());
                         }
                         display.value = buffer;
-                        console.log(buffer);
-                        console.log(buffer.isFloat);
+                        // console.log(buffer);
+                        // console.log(buffer.isFloat);
                     });
                 }
 
@@ -563,18 +611,48 @@ button.addEventListener("click", () => {
                     });
                 });
 
-                // console.table all the relevant values every frame
-                setInterval(() => {
-                    console.table({
-                        buffer: buffer,
-                        answer_buffer: answer_buffer,
-                        operator: operator,
-                        isFloat: isFloat
-                    });
-                }, 100);
+            </script>
+        </section>
+        <section>
+            <h4>Thing 8 - Mini JS console</h4>
+            <h6>This section uses a script to hijack the windows console object to add a listner that reports to this box. So any errors or console messages from the entire site will report here. You can try using your browsers developer tools to send a console.log message and it will show up here.</h6>
+            <div id="t8_output" style="width: 100%; height: 10rem; font-family: monospace; font-size: 10pt; border: 1px solid; border-radius: 2px; margin-bottom: 5px;"></div>
+            <input id="t8_input" type="text"></input>
 
+            <script>
+                const t8_output = document.querySelector("#t8_output");
+                const t8_input = document.querySelector("#t8_input");
 
+                /*
+                    PSSST! There's extra code for this thing in the <head> of this document. It needs to be there for higher script execution priority.
+                */
 
+                t8_input.addEventListener("keydown", (e) => {
+                    if (e.key == "Enter") {
+                        t8_output.innerHTML += `<span style="color: grey;">> ${t8_input.value}</span><br/>`;
+                        try {
+                            let op = eval(t8_input.value);
+                            if (op != undefined) {
+                                t8_output.value += op + "\n";
+                            }
+                            // t8_output.value += op + "\n";
+                        } catch (e) {
+                            t8_output.innerHTML += `<span style="color: red;">${e}</span><br/>`;
+                        }
+                        t8_input.value = "";
+                    }
+                });
+
+                document.addEventListener("log", (e) => {
+                    const color = {
+                        "log": "black",
+                        "error": "red",
+                        "warn": "orange"
+                    }[e.loglevel];
+
+                    // use innerHTML so that we have colors
+                    t8_output.innerHTML += `<span style="color: ${color};"> ${e.message}</span><br/>`;
+                });
             </script>
         </section>
     </main>
