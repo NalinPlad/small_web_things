@@ -58,6 +58,16 @@
 
             old_warn.apply(this, arguments);
         }
+
+        window.onerror = function (msg, url, lineNo, columnNo, error) {
+            // send to console
+            const lgevent = new Event("log");
+            const source = "(index)";
+            lgevent.message = `${error}<br/>&nbsp;&nbsp;&nbsp;&nbsp;at ${source}:${lineNo}:${columnNo}`;
+            // lgevent.type = "error";
+            lgevent.loglevel = "error";
+            document.dispatchEvent(lgevent);
+        }
     </script>
 
 </head>
@@ -653,6 +663,22 @@ button.addEventListener("click", () => {
                     // use innerHTML so that we have colors
                     t8_output.innerHTML += `<span style="color: ${color};"> ${e.message}</span><br/>`;
                 });
+            </script>
+        </section>
+        <section>
+            <h4>Thing 9 - Unicode soup</h4>
+            <div id="t9_soup"></div>
+            <script>
+                const t9_soup = document.querySelector("#t9_soup");
+
+                const soup = [];
+                for (let i = 0; i < 100; i++) {
+                    soup.push(String.fromCharCode(Math.floor(Math.random() * 65536)));
+                }
+
+                t9_soup.innerHTML = soup.map((row) => {
+                    return row.join("");
+                }).join("<br/>");
             </script>
         </section>
     </main>
