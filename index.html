@@ -255,7 +255,39 @@
                 </tbody>
                 <table>
         </section>
-        <section></section>
+        <section>
+            <h4>Thing 4 - CSS Editor with zero JS</h4>
+            <div class="box">
+                Hello World!
+            </div>
+            <style id="style_block" contenteditable="">/* Edit this class and watch the box update in real-time */
+            
+.box {
+  background-color: aquamarine;
+  width: fit-content;
+  padding: 5px;
+  transition: all 0.5s;
+}
+
+.box:hover {
+  background-color: violet;
+  transform: scale(1.1);
+}
+
+/* applied to html style tag. view-source to see whats happening */
+
+#style_block {
+    display: block; 
+    width: fit-content;
+    border: 1px 
+    black solid; 
+    white-space: pre; 
+    font-family: monospace; 
+    padding: 5px; 
+    margin-top: 10px;
+}
+</style>
+        </section>
     </main>
 </body>
 
