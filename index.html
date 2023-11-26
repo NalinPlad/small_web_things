@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Small web games by notmysql</title>
+</head>
+
+<body>
+    <header>
+        <h1>Small web things</h1>
+        <h6>A few small web things written in plain HTML JS and CSS. View the page's source to see the all the code in one file</h6>
+    </header>
+    <hr />
+    <main>
+        <section>
+            <h4>Thing 1 - Spring slider</h4>
+            <input id="t1-slider" type="range" min="-1" max="1" step="0.01" />
+            <p id="t1-value">0</p>
+            <p id="t1-vel">0</p>
+            <p id="t1-accel">0</p>
+            <script>
+                const slider = document.querySelector("#t1-slider");
+                const value = document.querySelector("#t1-value");
+                const vel = document.querySelector("#t1-vel");
+                const accel = document.querySelector("#t1-accel");
+
+                let isHolding = false;
+                let acceleration;
+                let velocity;
+                let damp;
+
+                let t1_interval;
+
+                slider.addEventListener("mousedown", () => {
+                    isHolding = true;
+                    clearInterval(t1_interval);
+                });
+
+                slider.addEventListener("mouseup", () => {
+                    isHolding = false;
+
+                    // make slider act like a spring, settling at 0
+                    clearInterval(t1_interval);
+
+                    acceleration = -slider.value / 600;
+                    velocity = 0;
+                    damp = 0.001;
+
+                    t1_interval = setInterval(() => {
+                        slider.value -= velocity;
+
+                        if (slider.value > 0) {
+                            acceleration = -damp;
+                        } else if (slider.value < 0) {
+                            acceleration = damp;
+                        }
+
+
+
+                        velocity -= acceleration;
+                        slider.dispatchEvent(new Event("input"));
+                    }, 1);
+                });
+
+                slider.addEventListener("input", (e) => {
+                    value.innerHTML = slider.value;
+                    vel.innerHTML = velocity;
+                    accel.innerHTML = acceleration;
+                    slider.style.transform = `rotate(${slider.value * 1}deg)`;
+                });
+
+
+            </script>
+        </section>
+        <section>
+            <h4>Thing 2 - Infinite slider</h4>
+            <input id="t2-slider" type="range" min="1" max="2" step="1" value="1" />
+            <p id="t2-value">0</p>
+            <script>
+                const slider2 = document.querySelector("#t2-slider");
+                const value2 = document.querySelector("#t2-value");
+
+                slider2.addEventListener("input", (e) => {
+                    value2.innerHTML = slider2.value;
+                    slider2.max = parseInt(slider2.value) + 1;
+                });
+            </script>
+        </section>
+        <section>
+            <h4>Thing 3 - Powers of 2</h4>
+            <h6>For each of the rows of checkbox pairs, choose one to click. One is safe. The other is not. See how far you can make it.</h6>
+            <input type="range" min="2" max="20" step="1" value="5" id="t3_num_pairs"></input><span id="t3_num_pairs_text" style="padding-left: 1rem;"><span id="t3_n_rows_span">5</span> rows = 1 in <span id="t3_1_in_span">32</span> = <span id="t3_percent_span">3.125</span>%</span>
+            <p id="t3_status">-</p>
+            <table>
+                <tbody id="t3_tbody">
+                    <tr>
+                        <td><input type="checkbox" id="t3-1-1" name="t3-1-1" value="1"></td>
+                        <td><input type="checkbox" id="t3-1-2" name="t3-1-2" value="2"></td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox" id="t3-2-1" name="t3-2-1" value="4"></td>
+                        <td><input type="checkbox" id="t3-2-2" name="t3-2-2" value="8"></td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox" id="t3-3-1" name="t3-3-1" value="16"></td>
+                        <td><input type="checkbox" id="t3-3-2" name="t3-3-2" value="32"></td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox" id="t3-4-1" name="t3-4-1" value="64"></td>
+                        <td><input type="checkbox" id="t3-4-2" name="t3-4-2" value="128"></td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox" id="t3-5-1" name="t3-5-1" value="256"></td>
+                        <td><input type="checkbox" id="t3-5-2" name="t3-5-2" value="512"></td>
+                    </tr>
+
+                    <script>
+                        const status = document.querySelector("#t3_status");
+
+                        function t3_setStatus(text) {
+                            status.innerText = text;
+                        }
+
+                        // get ref to the slider
+                        const slider3 = document.querySelector("#t3_num_pairs");
+                        let t3_num_pairs = slider3.value;
+
+                        // get ref to tbody
+                        const tbody = document.querySelector("#t3_tbody");
+
+                        // get ref to all the spans
+                        const t3_n_rows_span = document.querySelector("#t3_n_rows_span");
+                        const t3_1_in_span = document.querySelector("#t3_1_in_span");
+                        const t3_percent_span = document.querySelector("#t3_percent_span");
+
+                        slider3.addEventListener("input", (e) => {
+                            t3_setStatus("-");
+                            t3_lose();
+                            
+                            t3_num_pairs = slider3.value;
+                            
+                            // remove all rows from tbody
+                            while (tbody.firstChild) {
+                                tbody.removeChild(tbody.firstChild);
+                            }
+                            
+                            // add right number of rows to tbody
+                            for (let i = 1; i <= t3_num_pairs; i++) {
+                                const tr = document.createElement("tr");
+                                for (let j = 1; j <= 2; j++) {
+                                    const td = document.createElement("td");
+                                    const checkbox = document.createElement("input");
+                                    checkbox.type = "checkbox";
+                                    checkbox.id = `t3-${i}-${j}`;
+                                    checkbox.name = `t3-${i}-${j}`;
+                                    checkbox.value = Math.pow(2, (i - 1) * 2 + (j - 1));
+                                    td.appendChild(checkbox);
+                                    tr.appendChild(td);
+                                }
+                                tbody.appendChild(tr);
+                            }
+                            
+                            // update the spans
+                            t3_n_rows_span.innerText = t3_num_pairs;
+                            t3_1_in_span.innerText = Math.pow(2, t3_num_pairs);
+                            t3_percent_span.innerText = (1 / Math.pow(2, t3_num_pairs) * 100).toFixed(4);
+
+                            t3_get_cb_refs();
+                            t3_lose();
+                        });
+
+                        // get references to all the checkboxes in a 2d array
+                        let checkboxes = [];
+
+                        function t3_get_cb_refs(){
+                            checkboxes = [];
+                            for (let i = 1; i <= t3_num_pairs; i++) {
+                                checkboxes.push([]);
+                                for (let j = 1; j <= 2; j++) {
+                                    checkboxes[i - 1].push(document.querySelector(`#t3-${i}-${j}`));
+    
+                                    // disable the checkboxes
+                                    checkboxes[i - 1][j - 1].disabled = true;
+                                }
+                            }
+                        }
+
+                        t3_get_cb_refs();
+
+
+                        // for each row, enable both checkboxes and check them, and add a click event listener to both. then wait for the user's choice to reveal the next set
+                        let t3_row = 0;
+
+                        function t3_next() {
+                            // if the user has made it to the end, congratulate them
+                            if (t3_row >= t3_num_pairs) {
+                                t3_setStatus("You win!");
+                                return;
+                            } else {
+                                t3_setStatus("Score: " + t3_row + "");
+                            }
+
+                            // enable the checkboxes
+                            checkboxes[t3_row][0].disabled = false;
+                            checkboxes[t3_row][1].disabled = false;
+
+                            // // disable previous checkboxes
+                            if (t3_row > 0) {
+                                checkboxes[t3_row - 1][0].disabled = true;
+                                checkboxes[t3_row - 1][1].disabled = true;
+                            }
+
+                            // check the checkboxes
+                            checkboxes[t3_row][0].checked = true;
+                            checkboxes[t3_row][1].checked = true;
+
+                            // add a click event listener to both checkboxes
+                            checkboxes[t3_row][0].addEventListener("click", t3_check);
+                            checkboxes[t3_row][1].addEventListener("click", t3_check);
+
+                            // increment the row
+                            t3_row++;
+                        }
+                        function t3_lose() {
+                            t3_setStatus("Try Again");
+
+                            // disable all the checkboxes
+                            for (let i = 1; i <= t3_num_pairs; i++) {
+                                for (let j = 1; j <= 2; j++) {
+                                    checkboxes[i - 1][j - 1].disabled = true;
+                                    checkboxes[i - 1][j - 1].checked = false;
+                                }
+                            }
+
+                            t3_row = 0;
+
+                            // move on to the next row
+                            t3_next();
+                        }
+
+                        function t3_check() {
+                            if (Math.random() < 0.5) {
+                                t3_next();
+                            } else {
+                                t3_lose();
+                            }
+                        }
+
+                        // start the game
+                        t3_next();
+
+                    </script>
+                </tbody>
+                <table>
+        </section>
+        <section></section>
+    </main>
+</body>
+
+</html>
