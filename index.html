@@ -765,7 +765,78 @@ button.addEventListener("click", () => {
             </script>
         </section>
         <section>
-            <h4>Thing 10 - 1D rubiks cube</h4>
+            <h4>Thing 10 - Checkbox ripple display</h4>
+            <div style="margin-bottom: 2rem;">
+                <input type="checkbox" id="t10_ripple_mode"/><label style="margin-left: 1rem;" for="t10_ripple_mode">Wave mode</label>
+            </div>
+            <table class="t10_table"></table>
+
+            <script>
+                // get ref to checkbox
+                const t10_ripple_mode = document.querySelector("#t10_ripple_mode");
+
+                let ripple_mode = t10_ripple_mode.checked;
+
+                t10_ripple_mode.addEventListener("change", () => {
+                    ripple_mode = t10_ripple_mode.checked;
+                });
+
+                // generate 10x10 table of checkboxes
+                const t10_table = document.querySelector(".t10_table");
+
+                for (let i = 0; i < 10; i++) {
+                    const tr = document.createElement("tr");
+                    for (let j = 0; j < 10; j++) {
+                        const td = document.createElement("td");
+                        const checkbox = document.createElement("input");
+                        checkbox.type = "checkbox";
+                        checkbox.id = `t10-${i}-${j}`;
+                        checkbox.name = `t10-${i}-${j}`;
+                        td.appendChild(checkbox);
+                        tr.appendChild(td);
+                    }
+                    t10_table.appendChild(tr);
+                }
+
+                // get refs to all the checkboxes in a 2d array
+
+                let t10_checkboxes = [];
+                for (let i = 0; i < 10; i++) {
+                    t10_checkboxes.push([]);
+                    for (let j = 0; j < 10; j++) {
+                        t10_checkboxes[i].push(document.querySelector(`#t10-${i}-${j}`));
+                    }
+                }
+
+                // add event listeners to all the checkboxes
+
+                for (let i = 0; i < 10; i++) {
+                    for (let j = 0; j < 10; j++) {
+                        t10_checkboxes[i][j].addEventListener("click", () => {
+                            // ripple out to other boxes in a circle around the clicked box
+                            for (let k = 0; k < 10; k++) {
+                                for (let l = 0; l < 10; l++) {
+                                    if (Math.sqrt(Math.pow(i - k, 2) + Math.pow(j - l, 2)) < 20) {
+                                        setTimeout(() => {
+                                            t10_checkboxes[k][l].checked = t10_checkboxes[i][j].checked;
+                                        }, 100*(Math.sqrt(Math.pow(i - k, 2) + Math.pow(j - l, 2))));
+
+                                        if(!ripple_mode) continue;
+                                        setTimeout(() => {
+                                            if(k != i || l != j) t10_checkboxes[k][l].checked = !t10_checkboxes[i][j].checked;
+                                        }, 100+100*(Math.sqrt(Math.pow(i - k, 2) + Math.pow(j - l, 2))));
+                                    }
+                                }
+                            }
+                        });
+                    }
+                }
+
+            </script>
+
+            
+
+
         </section>
     </main>
 </body>
