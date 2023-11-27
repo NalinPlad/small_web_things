@@ -74,18 +74,8 @@
 
 <body>
     <header>
-        <h1 id="t0_title"> 0 Small web things</h1>
+        <h1 id="t0_title">Small web things</h1>
         <h6>just some small web things written in plain HTML JS and CSS. View the page's source to see all the code in one file</h6>
-        <script>
-            document.addEventListener("DOMContentLoaded", _ => {
-                // get number of sections
-                const n_sections = document.querySelectorAll("section").length;
-                const t0_title = document.querySelector("#t0_title");
-    
-                // replace #N with number of sections
-                t0_title.innerText = t0_title.innerText.replace("0", n_sections);
-            })
-        </script>
     </header>
     <hr />
     <main>
@@ -773,6 +763,9 @@ button.addEventListener("click", () => {
                     t9_input.blur();
                 });                
             </script>
+        </section>
+        <section>
+            <h4>Thing 10 - 1D rubiks cube</h4>
         </section>
     </main>
 </body>
