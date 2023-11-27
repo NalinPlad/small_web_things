@@ -24,7 +24,7 @@
         let messages = [];
 
         console.log = function (...args) {
-            var msg = {...args}[0];
+            var msg = { ...args }[0];
             messages.push(msg);
             const lgevent = new Event("log");
             lgevent.message = msg;
@@ -36,7 +36,7 @@
         }
 
         console.error = function (...args) {
-            var msg = {...args}[0];
+            var msg = { ...args }[0];
             messages.push(msg);
             const lgevent = new Event("log");
             lgevent.message = msg;
@@ -48,7 +48,7 @@
         }
 
         console.warn = function (...args) {
-            var msg = {...args}[0];
+            var msg = { ...args }[0];
             messages.push(msg);
             const lgevent = new Event("log");
             lgevent.message = msg;
@@ -203,14 +203,14 @@
                         slider3.addEventListener("input", (e) => {
                             t3_setStatus("-");
                             t3_lose();
-                            
+
                             t3_num_pairs = slider3.value;
-                            
+
                             // remove all rows from tbody
                             while (tbody.firstChild) {
                                 tbody.removeChild(tbody.firstChild);
                             }
-                            
+
                             // add right number of rows to tbody
                             for (let i = 1; i <= t3_num_pairs; i++) {
                                 const tr = document.createElement("tr");
@@ -226,7 +226,7 @@
                                 }
                                 tbody.appendChild(tr);
                             }
-                            
+
                             // update the spans
                             t3_n_rows_span.innerText = t3_num_pairs;
                             t3_1_in_span.innerText = Math.pow(2, t3_num_pairs);
@@ -239,13 +239,13 @@
                         // get references to all the checkboxes in a 2d array
                         let checkboxes = [];
 
-                        function t3_get_cb_refs(){
+                        function t3_get_cb_refs() {
                             checkboxes = [];
                             for (let i = 1; i <= t3_num_pairs; i++) {
                                 checkboxes.push([]);
                                 for (let j = 1; j <= 2; j++) {
                                     checkboxes[i - 1].push(document.querySelector(`#t3-${i}-${j}`));
-    
+
                                     // disable the checkboxes
                                     checkboxes[i - 1][j - 1].disabled = true;
                                 }
@@ -326,33 +326,33 @@
             <div class="box">
                 Hello World!
             </div>
-            <style class="style_block" contenteditable="">/* Edit this class and watch the box update in real-time */
-            
+            <style class="style_block" contenteditable="">
+/* Edit this class and watch the box update in real-time */
+
 .box {
-  background-color: aquamarine;
-  width: fit-content;
-  padding: 5px;
-  transition: all 0.5s;
+    background-color: aquamarine;
+    width: fit-content;
+    padding: 5px;
+    transition: all 0.5s;
 }
 
 .box:hover {
-  background-color: violet;
-  transform: scale(1.1);
+    background-color: violet;
+    transform: scale(1.1);
 }
 
 /* applied to html style tag. view-source to see whats happening */
 
 .style_block {
-    display: block; 
+    display: block;
     width: fit-content;
-    border: 1px 
-    black solid; 
-    white-space: pre; 
-    font-family: monospace; 
-    padding: 5px; 
+    border: 1px black solid;
+    white-space: pre;
+    font-family: monospace;
+    padding: 5px;
     margin-top: 10px;
 }
-</style>
+            </style>
         </section>
         <section>
             <h4>Thing 5 - JS Editor with zero JS</h4>
@@ -378,19 +378,20 @@ button.addEventListener("click", () => {
             <h6>This usually wouldn't work but we can use JS to grab the full HTML for the document and inject it into the iframe instead of just setting the source of the iframe to "window.location.href"</h6>
 
             <div class="t6_controls">
-                <input id="t6_rot_slider" style="margin-bottom: 1rem;" type="range" min="0" max="360" step="0.1" value="0"/><span style="padding-left: 1rem;">rotation: <span id="t6_deg_span" style="font-family: monospace;">0deg</span></span><br/>
-                <input id="t6_scale_slider" style="margin-bottom: 1rem;" type="range" min="-1" max="1.1" step="0.1" value="1"/><span style="padding-left: 1rem;">scale: <span id="t6_scale_span" style="font-family: monospace;">1</span></span>
+                <input id="t6_rot_slider" style="margin-bottom: 1rem;" type="range" min="0" max="360" step="0.1" value="0" /><span style="padding-left: 1rem;">rotation: <span id="t6_deg_span" style="font-family: monospace;">0deg</span></span><br />
+                <input id="t6_scale_slider" style="margin-bottom: 1rem;" type="range" min="-1" max="1.1" step="0.1" value="1" /><span style="padding-left: 1rem;">scale: <span id="t6_scale_span" style="font-family: monospace;">1</span></span>
             </div>
 
             <iframe id="t6_iframe" src="" loading="eager"></iframe>
 
-            
+
             <style>
                 #t6_iframe {
                     /* width: 100%; */
                     /* height: 20rem; */
-                    aspect-ratio: 16/9; 
+                    aspect-ratio: 16/9;
                 }
+
                 .t6_controls {
                     margin-bottom: 2rem;
                 }
@@ -424,17 +425,17 @@ button.addEventListener("click", () => {
                     document.querySelector("#t6_iframe").style.scale = `${t6_scale_slider.value}`;
                 });
 
-                function render(){
+                function render() {
                     let document_html = document.querySelector("html").innerHTML;
                     function onEntry(entry) {
                         entry.forEach(change => {
-                            if(change.isIntersecting){
+                            if (change.isIntersecting) {
                                 const t6_iframe = document.querySelector("#t6_iframe");
                                 t6_iframe.srcdoc = document_html;
                             }
                         });
                     }
-                    
+
                     let observer = new IntersectionObserver(onEntry, {});
                     observer.observe(document.querySelector("#t6_iframe"));
                 }
@@ -523,7 +524,7 @@ button.addEventListener("click", () => {
                 for (let i = 0; i < 10; i++) {
                     buttons[i] = document.querySelector(`#t7_${i}`);
                 }
-                buttons["."] = document.querySelector("#t7_decimal");   
+                buttons["."] = document.querySelector("#t7_decimal");
                 buttons["="] = document.querySelector("#t7_equals");
                 buttons["/"] = document.querySelector("#t7_divide");
                 buttons["*"] = document.querySelector("#t7_multiply");
@@ -573,8 +574,8 @@ button.addEventListener("click", () => {
                         return;
                     }
                     isFloat = true;
-                    buffer = parseFloat(buffer.toString()+".");
-                    display.value = buffer+'.';
+                    buffer = parseFloat(buffer.toString() + ".");
+                    display.value = buffer + '.';
                 });
 
                 buttons["="].addEventListener("click", () => {
@@ -606,7 +607,7 @@ button.addEventListener("click", () => {
                 const operators = ["+", "-", "*", "/"];
                 operators.forEach((op) => {
                     buttons[op].addEventListener("click", () => {
-                        if(answer_buffer == 0){
+                        if (answer_buffer == 0) {
                             operator = op;
                             answer_buffer = buffer;
                             buffer = 0;
@@ -693,15 +694,15 @@ button.addEventListener("click", () => {
 
                 }
 
-                .t9_auth_app > h6 {
+                .t9_auth_app>h6 {
                     margin-bottom: 10px;
                 }
 
-                .t9_auth_app > * {
+                .t9_auth_app>* {
                     margin: 2px;
                 }
 
-                .t9_auth_app > progress {
+                .t9_auth_app>progress {
                     /* align-self: center; */
                     /* margin-top: 10px; */
                     width: 50%;
@@ -710,11 +711,12 @@ button.addEventListener("click", () => {
                 .t9_hidden {
                     background-color: black;
                 }
+
                 .t9_hidden:hover {
                     background-color: transparent;
                 }
             </style>
-            
+
             <script>
                 // get refs
                 const t9_code = document.querySelector("#t9_code");
@@ -767,7 +769,7 @@ button.addEventListener("click", () => {
         <section>
             <h4>Thing 10 - Checkbox ripple display</h4>
             <div style="margin-bottom: 2rem;">
-                <input type="checkbox" id="t10_ripple_mode"/><label style="margin-left: 1rem;" for="t10_ripple_mode">Wave mode</label>
+                <input type="checkbox" id="t10_ripple_mode" /><label style="margin-left: 1rem;" for="t10_ripple_mode">Wave mode</label>
             </div>
             <table class="t10_table"></table>
 
@@ -819,12 +821,12 @@ button.addEventListener("click", () => {
                                     if (Math.sqrt(Math.pow(i - k, 2) + Math.pow(j - l, 2)) < 20) {
                                         setTimeout(() => {
                                             t10_checkboxes[k][l].checked = t10_checkboxes[i][j].checked;
-                                        }, 100*(Math.sqrt(Math.pow(i - k, 2) + Math.pow(j - l, 2))));
+                                        }, 100 * (Math.sqrt(Math.pow(i - k, 2) + Math.pow(j - l, 2))));
 
-                                        if(!ripple_mode) continue;
+                                        if (!ripple_mode) continue;
                                         setTimeout(() => {
-                                            if(k != i || l != j) t10_checkboxes[k][l].checked = !t10_checkboxes[i][j].checked;
-                                        }, 100+100*(Math.sqrt(Math.pow(i - k, 2) + Math.pow(j - l, 2))));
+                                            if (k != i || l != j) t10_checkboxes[k][l].checked = !t10_checkboxes[i][j].checked;
+                                        }, 100 + 100 * (Math.sqrt(Math.pow(i - k, 2) + Math.pow(j - l, 2))));
                                     }
                                 }
                             }
@@ -834,9 +836,51 @@ button.addEventListener("click", () => {
 
             </script>
 
-            
 
 
+
+        </section>
+        <section>
+            <h4>Thing 11 - Gravity Slider</h4>
+            <input type="range" id="t11_range" min="0" max="100" value="0" style="transform: rotate(-90deg);margin-top: 3rem;margin-bottom: 3rem;"/>
+            <script>
+                // ref to slider
+                const t11_range = document.querySelector("#t11_range");
+
+                // make the slider ball fall to the end of the slider when dropped and bounce at the bottom, losing energy each time
+                let t11_velocity = 0;
+                let t11_acceleration = 0;
+                let t11_damp = 0.01;
+
+                let t11_interval;
+
+                t11_range.addEventListener("mousedown", () => {
+                    clearInterval(t11_interval);
+                });
+
+                t11_range.addEventListener("mouseup", () => {
+                    t11_velocity = 0;
+                    t11_acceleration = 0;
+                    // t11_damp = 0.01;
+
+                    t11_interval = setInterval(() => {
+                        t11_range.value -= t11_velocity;
+
+                        if (t11_range.value > 0) {
+                            t11_acceleration = -0.05;
+                        } else if (t11_range.value <= 0) {
+                            // t11_acceleration = 0.05;
+                            t11_velocity = -t11_velocity*0.7;
+                        }
+
+                        t11_velocity -= t11_acceleration;
+                    }, 1);
+                });
+
+
+               
+
+            </script>
         </section>
     </main>
 </body>
