@@ -879,7 +879,230 @@ button.addEventListener("click", () => {
             </script>
         </section>
         <section>
-            <h4>Thing 12 - </h4>
+            <h4>Thing 12 - Speed match</h4>
+            <h6>Click the start button, and a 3 second countdown will start. When it ends, the checkbox grid on the left will show the pattern you have to copy over to the grid on the right</h6>
+            <p id="t12_best_time">Best:</p>
+            <p id="t12_current_time">Time:</p>
+            <button id="t12_start">Start</button>
+            <div class="t12_grids">
+                <table id="t12_left_grid"></table>
+                <table id="t12_right_grid"></table>
+            </div>
+            <style>
+                .t12_grids {
+                    margin-top: 1rem;
+                    display: flex;
+                    flex-direction: row;
+                    border: 3px ridge red;
+                    width: fit-content;
+                    transform: scale(1);
+                }
+
+                .t12_grids>table>tr>td>input {
+                    margin: 0;
+                }
+
+                .t12_grids>table>tr>td {
+                    margin:0;
+                    padding: 0;
+                    height: fit-content;
+                }
+
+                .t12_grids>table>tr {
+                    margin:0;
+                    height: 10px;
+                    line-height: 0;
+                }
+
+                #t12_left_grid {
+                    border-right: 1px solid black;
+                }
+
+                #t12_right_grid {
+                    border-left: 1px solid black;
+                }
+                </style>
+            <script>
+                // get ref to start button
+                const t12_start = document.querySelector("#t12_start");
+
+                // get ref to best time
+                const t12_best_time = document.querySelector("#t12_best_time");
+
+                // get ref to current time
+                const t12_current_time = document.querySelector("#t12_current_time");
+
+                let t12_best;
+
+                // https://stackoverflow.com/a/16436975
+                function arraysEqual(a, b) {
+                    if (a === b) return true;
+                    if (a == null || b == null) return false;
+                    if (a.length !== b.length) return false;
+
+                    // If you don't care about the order of the elements inside
+                    // the array, you should sort both arrays here.
+                    // Please note that calling sort on an array will modify that array.
+                    // you might want to clone your array first.
+
+                    for (var i = 0; i < a.length; ++i) {
+                        if (a[i] !== b[i]) return false;
+                    }
+                    return true;
+                }
+
+                // https://stackoverflow.com/a/2450976
+                function shuffleArray(array) {
+                    let currentIndex = array.length,  randomIndex;
+
+                    // While there remain elements to shuffle.
+                    while (currentIndex > 0) {
+
+                        // Pick a remaining element.
+                        randomIndex = Math.floor(Math.random() * currentIndex);
+                        currentIndex--;
+
+                        // And swap it with the current element.
+                        [array[currentIndex], array[randomIndex]] = [
+                        array[randomIndex], array[currentIndex]];
+                    }
+
+                    return array;
+                }
+
+                // generate the left grid and store refs to all boxes
+                const t12_left_grid = document.querySelector("#t12_left_grid");
+                const t12_left_boxes = [];
+                for (let i = 0; i < 4; i++) {
+                    const tr = document.createElement("tr");
+                    for (let j = 0; j < 4; j++) {
+                        const td = document.createElement("td");
+                        const checkbox = document.createElement("input");
+                        checkbox.type = "checkbox";
+                        checkbox.id = `t12_left-${i}-${j}`;
+                        checkbox.name = `t12_left-${i}-${j}`;
+                        checkbox.disabled = true;
+                        td.appendChild(checkbox);
+                        tr.appendChild(td);
+                        t12_left_boxes.push(checkbox);
+                    }
+                    t12_left_grid.appendChild(tr);
+                }
+
+                // generate the right grid and store refs to all boxes
+                const t12_right_grid = document.querySelector("#t12_right_grid");
+                const t12_right_boxes = [];
+                for (let i = 0; i < 4; i++) {
+                    const tr = document.createElement("tr");
+                    for (let j = 0; j < 4; j++) {
+                        const td = document.createElement("td");
+                        const checkbox = document.createElement("input");
+                        checkbox.type = "checkbox";
+                        checkbox.id = `t12_right-${i}-${j}`;
+                        checkbox.name = `t12_right-${i}-${j}`;
+                        checkbox.disabled = true;
+                        td.appendChild(checkbox);
+                        tr.appendChild(td);
+                        t12_right_boxes.push(checkbox);
+                    }
+                    t12_right_grid.appendChild(tr);
+                }
+
+                const t12_outline = document.querySelector(".t12_grids");
+
+                let t12_curr_interval;
+
+                // onclick, start 3 second timer and display countdown on button text. Then enable all right side checkboxes
+                t12_start.addEventListener("click", () => {
+                    t12_start.disabled = true;
+                    t12_start.innerText = "3";
+                    t12_outline.style.border="3px ridge red";
+                    
+                    if(t12_curr_interval != undefined){clearInterval(t12_curr_interval)}
+
+                    setTimeout(() => {
+                        t12_start.innerText = "2";
+                        setTimeout(() => {
+                            t12_start.innerText = "1";
+                            setTimeout(() => {
+                                t12_start.innerText = "Go!";
+
+                                let t12_start_time = Date.now();
+
+                                let t12_time_seconds = 0;
+
+                                // make the current time update every 0.01 seconds
+                                t12_curr_interval = setInterval(() => {
+                                    t12_time_seconds = (Date.now() - t12_start_time) / 1000;
+                                    t12_current_time.innerText = `Time: ${(t12_time_seconds).toFixed(2)}s`;
+                                }, 10);
+
+                                t12_outline.style.border="3px ridge yellow";
+
+                                // disable all right side checkboxes
+                                t12_right_boxes.forEach((box) => {
+                                    box.checked = false;
+                                    box.disabled = true;
+                                });
+            
+                                // generate a random pattern for the left side(total 8 true values in the array of 16 bools)
+                                let pattern = [];
+                                for (let i = 0; i < 16; i++) {
+                                    if(pattern.length < 8){
+                                        pattern.push(true);
+                                    } else {
+                                        pattern.push(false);
+                                    }
+                                }
+                                pattern = shuffleArray(pattern);
+                                console.log(pattern);
+            
+                                // set the left side checkboxes to the pattern
+                                for (let i = 0; i < 16; i++) {
+                                    t12_left_boxes[i].checked = pattern[i];
+                                }
+            
+                                // enable all right side checkboxes
+                                t12_right_boxes.forEach((box) => {
+                                    box.disabled = false;
+                                });
+
+                                // on each checkbox click, check if the left side is correct
+                                t12_right_boxes.forEach((box) =>{
+                                    box.addEventListener("click", _ => {
+
+                                        // generate check pattern
+                                        let check_pattern = []
+                                        t12_right_boxes.forEach((box) => {
+                                            check_pattern.push(box.checked)
+                                        })
+
+                                        if(arraysEqual(pattern, check_pattern)) {
+                                            // finished
+
+                                            if(t12_time_seconds<t12_best || t12_best == undefined) {
+                                                t12_best = t12_time_seconds;
+                                                t12_best_time.innerText = `Best: ${t12_best.toFixed(2)}s`;
+                                            }
+                                            // alert("you win");
+                                            clearInterval(t12_curr_interval)
+                                            t12_outline.style.border="3px ridge lightgreen";
+
+                                            t12_start.innerText = "Start";
+                                            t12_start.disabled = false; 
+                                        }
+                                        
+                                    });
+                                });
+
+                                
+                                
+                            }, 1000);
+                        }, 1000);
+                    }, 1000);
+
+                });
+            </script>
         </section>
     </main>
 </body>
