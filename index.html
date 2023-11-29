@@ -880,7 +880,7 @@ button.addEventListener("click", () => {
         </section>
         <section>
             <h4>Thing 12 - Speed match</h4>
-            <h6>Click the start button, and a 3 second countdown will start. When it ends, the checkbox grid on the left will show the pattern you have to copy over to the grid on the right</h6>
+            <h6>Click the start button, and a 3 second countdown will start. When it ends, the checkbox grid on the left will show the pattern you have to copy over to the grid on the right. PRO TIP: zoom in so the game fills your whole screen</h6>
             <p id="t12_best_time">Best:</p>
             <p id="t12_current_time">Time:</p>
             <button id="t12_start">Start</button>
@@ -933,6 +933,12 @@ button.addEventListener("click", () => {
                 const t12_current_time = document.querySelector("#t12_current_time");
 
                 let t12_best;
+
+                // check for saved best time
+                if (localStorage.getItem("t12_best") != undefined) {
+                    t12_best = parseFloat(localStorage.getItem("t12_best"));
+                    t12_best_time.innerText = `Best: ${t12_best.toFixed(2)}s`;
+                }
 
                 // https://stackoverflow.com/a/16436975
                 function arraysEqual(a, b) {
@@ -1055,7 +1061,7 @@ button.addEventListener("click", () => {
                                     }
                                 }
                                 pattern = shuffleArray(pattern);
-                                console.log(pattern);
+                                // console.log(pattern);
             
                                 // set the left side checkboxes to the pattern
                                 for (let i = 0; i < 16; i++) {
@@ -1083,6 +1089,7 @@ button.addEventListener("click", () => {
                                             if(t12_time_seconds<t12_best || t12_best == undefined) {
                                                 t12_best = t12_time_seconds;
                                                 t12_best_time.innerText = `Best: ${t12_best.toFixed(2)}s`;
+                                                localStorage.setItem("t12_best", t12_best);
                                             }
                                             // alert("you win");
                                             clearInterval(t12_curr_interval)
@@ -1104,6 +1111,9 @@ button.addEventListener("click", () => {
                 });
             </script>
         </section>
+        <!-- <section>
+            <h4>Thing 13 - </h4>
+        </section> -->
     </main>
 </body>
 
