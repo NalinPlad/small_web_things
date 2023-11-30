@@ -76,6 +76,58 @@
     <header>
         <h1 id="t0_title">Small web things</h1>
         <h6>just some small web things written in plain HTML JS and CSS. View the page's source to see all the code in one file</h6>
+        <section>
+            <style>
+                .tc_g {
+                    background-color: lightgreen;
+                }
+
+                .tc_io {
+                    background-color: lightblue;
+                }
+
+                .tc_ww {
+                    background-color: lightpink;
+                }
+
+                .tc_u {
+                    background-color: lightsalmon;
+                }
+
+                .tc_g, .tc_io, .tc_ww, .tc_u {
+                    /* display: inline-block; */
+                    padding-inline: 0.5rem;
+                    width: fit-content;
+                }
+
+                .tc_cats {
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: flex-start;
+                    margin-bottom: 1rem;
+                    font-size: 10pt;
+                    
+                }
+            </style>
+            <h4>Table of contents</h4>
+            <div class="tc_cats">
+                <p class="tc_g">Game</p><p class="tc_io">Input Oddity</p><p class="tc_ww">Weird Web</p><p class="tc_u">Utility</p>
+            </div>
+                <ol>
+                    <li class="tc_io">Spring Slider</li>
+                    <li class="tc_io">Infinite Slider</li>
+                    <li class="tc_g">A game of chance</li>
+                    <li class="tc_ww">CSS Editor with zero JS</li>
+                    <li class="tc_ww">JS Editor with zero JS</li>
+                    <li class="tc_ww">Iframe Inception</li>
+                    <li class="tc_u">Toy calculator</li>
+                    <li class="tc_u">Mini JS console</li>
+                    <li class="tc_g">The 2FA Game</li>
+                    <li class="tc_io">Checkbox ripple display</li>
+                    <li class="tc_io">Gravity Slider</li>
+                    <li class="tc_g">Speed match</li>
+                </ol>
+        </section>
     </header>
     <hr />
     <main>
@@ -1111,9 +1163,9 @@ button.addEventListener("click", () => {
                 });
             </script>
         </section>
-        <!-- <section>
+        <section>
             <h4>Thing 13 - </h4>
-        </section> -->
+        </section>
     </main>
 </body>
 
