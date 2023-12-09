@@ -1163,6 +1163,97 @@ button.addEventListener("click", () => {
                 });
             </script>
         </section>
+        <section>
+            <h4>Thing 13 - Morse Code</h4>
+            <p id="out">~ </p>
+            <p id="morse">~=> </p>
+            <input id="t13_click" type="button" value=">%<"/>
+            <script>
+                const t13_click = document.querySelector("#t13_click");
+                const t13_out = document.querySelector("#out");
+                const t13_morse = document.querySelector("#morse");
+
+                // convert clicks to either dot or dash, until letter timeout. then convert to letter and add to output. then wait for word timeout and add space to output. while writing word, add dot / dashes to the morse text box
+                let t13_letter_timeout = 1000;
+                let t13_word_timeout = 3000;
+                let t13_dash_timeout = 300;
+
+                let t13_timedown;
+
+                let t13_letter = "";
+                let t13_text = "";
+
+                let t13_timeout;
+
+                const MORSE = {
+                    "A":".-",
+                    "B":"-...",
+                    "C":"-.-.",
+                    "D":"-..",
+                    "E":".",
+                    "F":"..-.",
+                    "G":"--.",
+                    "H":"....",
+                    "I":"..",
+                    "J":".---",
+                    "K":"-.-",
+                    "L":".-..",
+                    "M":"--",
+                    "N":"-.",
+                    "O":"---",
+                    "P":".--.",
+                    "Q":"--.-",
+                    "R":".-.",
+                    "S":"...",
+                    "T":"-",
+                    "U":"..-",
+                    "V":"...-",
+                    "W":".--",
+                    "X":"-..-",
+                    "Y":"-.--",
+                    "Z":"--..",
+                    "0":"-----",
+                    "1":".----",
+                    "2":"..---",
+                    "3":"...--",
+                    "4":"....-",
+                    "5":".....",
+                    "6":"-....",
+                    "7":"--...",
+                    "8":"---..",
+                    "9":"----."
+                }
+
+                t13_click.addEventListener("mousedown", () => {
+                    t13_timedown = Date.now();
+                    clearTimeout(t13_timeout);
+                });
+
+                t13_click.addEventListener("mouseup", () => {
+                    if(Date.now() - t13_timedown > t13_dash_timeout) {
+                        t13_letter += "-";
+                    } else {
+                        t13_letter += ".";
+                    }
+                    
+                    t13_morse.innerText += t13_letter[t13_letter.length-1];
+
+                    t13_timeout = setTimeout(() => {
+                        let l = Object.keys(MORSE).find(key => MORSE[key] === t13_letter)
+                        if (l){
+                            t13_text += l;
+                            t13_out.innerText = t13_text;
+                            t13_letter = "";
+                            t13_morse.innerText = "~=>  ";
+                        } else {
+                            t13_letter = "";
+                            t13_morse.innerText = "~=>  ";
+                        }
+                    }, t13_letter_timeout);
+                });
+
+            </script>
+        </section>
     </main>
 </body>
 
